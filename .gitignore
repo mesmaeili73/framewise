@@ -1,0 +1,93 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Poetry
+poetry.lock
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+data/
+videos/
+frames/
+*.h5
+*.ckpt
+*.pth
+*.safetensors
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 858dc50 (refactor: Move test outputs to test_outputs/ directory)
+# Test outputs
+test_outputs/
+test_transcript.json
+test_frames/
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3dda9dd (feat: Add multimodal embeddings and vector search (Phase 3))
+pipeline_frames/
+pipeline_demo.db/
+*.db/
+
+# Environment variables
+.env
+
+<<<<<<< HEAD
+=======
+>>>>>>> db3361e (Initial commit: Project structure and Poetry setup)
+=======
+
+>>>>>>> 858dc50 (refactor: Move test outputs to test_outputs/ directory)
+=======
+>>>>>>> 25bbc40 (feat: Add transcript correction and complete LLM integration)
+# Logs
+*.log
+logs/
