@@ -160,8 +160,6 @@ class FrameWiseVectorStore:
         """
         logger.info(f"Searching for: '{query_text}'")
         
-<<<<<<< HEAD
-<<<<<<< HEAD
         # Generate query embedding based on search type
         if search_type == "text":
             # Text-only search
@@ -191,45 +189,6 @@ class FrameWiseVectorStore:
                 text_as_image = text_emb[:image_dim]
             
             query_embedding = np.concatenate([text_as_image, text_emb])
-=======
-        # Generate query embedding
-=======
-        # Generate query embedding based on search type
->>>>>>> 454e02d (fix: Correct dimension mismatch in hybrid search)
-        if search_type == "text":
-            # Text-only search
-            query_embedding = embedder.embed_text(query_text)
-        elif search_type == "image":
-            # For image search with text query, we need CLIP's text encoder
-            # For now, use text embedding as approximation
-            query_embedding = embedder.embed_text(query_text)
-        else:  # hybrid
-            # For hybrid search, we need to match the combined vector dimensions
-            # Get both text and image embeddings
-            text_emb = embedder.embed_text(query_text)
-<<<<<<< HEAD
-            # Duplicate to match combined vector size
-            query_embedding = np.concatenate([text_emb, text_emb])
->>>>>>> 3dda9dd (feat: Add multimodal embeddings and vector search (Phase 3))
-=======
-            
-            # For text query on hybrid search, duplicate text embedding
-            # to match the combined (image + text) vector size
-            # This gives equal weight to both modalities
-            image_dim = 512  # CLIP dimension
-            text_dim = len(text_emb)
-            
-            # Create a combined vector: [text_emb, text_emb_padded]
-            # Pad or truncate to match image dimension
-            if text_dim < image_dim:
-                # Pad with zeros
-                text_as_image = np.pad(text_emb, (0, image_dim - text_dim))
-            else:
-                # Truncate
-                text_as_image = text_emb[:image_dim]
-            
-            query_embedding = np.concatenate([text_as_image, text_emb])
->>>>>>> 454e02d (fix: Correct dimension mismatch in hybrid search)
         
         return self.search(query_embedding, limit, search_type)
     
