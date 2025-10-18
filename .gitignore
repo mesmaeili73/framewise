@@ -68,6 +68,14 @@ test_frames/
 pipeline_frames/
 pipeline_demo.db/
 *.db/
+test_env/
+test_env_v2/
+
+# Test scripts (dev only)
+test_*.py
+
+# Private files
+ROADMAP_PRIVATE.md
 
 # Environment variables
 .env

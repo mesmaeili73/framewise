@@ -5,7 +5,7 @@ Transform tutorial videos into instant, visual support with intelligent
 frame extraction and multimodal RAG.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 
 from framewise.core import (
     TranscriptExtractor,
@@ -15,7 +15,15 @@ from framewise.core import (
     ExtractedFrame,
 )
 from framewise.embeddings import FrameWiseEmbedder
-from framewise.retrieval import FrameWiseVectorStore, FrameWiseQA
+from framewise.retrieval import FrameWiseVectorStore
+
+# Optional LLM features
+try:
+    from framewise.retrieval import FrameWiseQA
+    _has_llm = True
+except ImportError:
+    _has_llm = False
+    FrameWiseQA = None
 
 __all__ = [
     "TranscriptExtractor",
@@ -25,5 +33,7 @@ __all__ = [
     "ExtractedFrame",
     "FrameWiseEmbedder",
     "FrameWiseVectorStore",
-    "FrameWiseQA",
 ]
+
+if _has_llm:
+    __all__.append("FrameWiseQA")

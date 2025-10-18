@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "framewise"
-version = "0.1.0"
+version = "0.1.2"
 description = "AI-powered video tutorial assistant with intelligent frame extraction and multimodal RAG"
 authors = ["Mohammad Esmaeili <mimonachi@gmail.com>"]
 license = "MIT"

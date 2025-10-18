@@ -1,0 +1,14 @@
+include README.md
+include LICENSE
+include pyproject.toml
+include .env.example
+
+recursive-include framewise *.py
+recursive-include docs *.md
+recursive-include examples *.py
+
+exclude test_*.py
+exclude .env
+recursive-exclude test_outputs *
+recursive-exclude __pycache__ *
+recursive-exclude *.pyc *

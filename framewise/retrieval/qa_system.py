@@ -5,8 +5,14 @@ Question-Answering system using LLM with retrieved frames
 import os
 from pathlib import Path
 from typing import List, Dict, Optional
-from dotenv import load_dotenv
 from loguru import logger
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv is optional
+    pass
 
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -14,10 +20,6 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from framewise.embeddings.embedder import FrameWiseEmbedder
 from framewise.retrieval.vector_store import FrameWiseVectorStore
-
-
-# Load environment variables
-load_dotenv()
 
 
 class FrameWiseQA:
