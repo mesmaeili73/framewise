@@ -2,75 +2,57 @@
 name = "framewise"
 version = "0.1.0"
 description = "AI-powered video tutorial assistant with intelligent frame extraction and multimodal RAG"
-authors = ["Mohammad Esmaeili <your-email@example.com>"]
+authors = ["Mohammad Esmaeili <mimonachi@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/yourusername/framewise"
-repository = "https://github.com/yourusername/framewise"
-keywords = ["video", "rag", "ai", "tutorials", "multimodal", "embeddings"]
+homepage = "https://github.com/mesmaeili73/framewise"
+repository = "https://github.com/mesmaeili73/framewise"
+documentation = "https://github.com/mesmaeili73/framewise#readme"
+keywords = ["video", "rag", "ai", "tutorials", "multimodal", "embeddings", "llm", "whisper", "clip", "langchain"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Multimedia :: Video",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
 ]
+packages = [{include = "framewise"}]
+exclude = ["tests", "test_*.py", "test_outputs", ".env"]
 
 [tool.poetry.dependencies]
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4b83543 (fix: Workaround for triton dependency on macOS)
-python = "~3.11"
-# Dependencies will be added incrementally
+python = ">=3.9,<3.14"
+# Core dependencies
 openai-whisper = "^20231117"
 loguru = "^0.7.0"
 opencv-python = "^4.8.0"
 Pillow = "^10.0.0"
 numpy = "^1.24.0"
-<<<<<<< HEAD
-<<<<<<< HEAD
 sentence-transformers = "^2.2.2"
 transformers = "^4.35.0"
 lancedb = "^0.3.0"
-anthropic = "^0.39.0"
-python-dotenv = "^1.0.0"
-langchain = "^0.3.0"
-langchain-anthropic = "^0.3.0"
-<<<<<<< HEAD
-=======
->>>>>>> 4338149 (feat: Add intelligent frame extraction with scene detection)
-=======
-sentence-transformers = "^2.2.2"
-transformers = "^4.35.0"
-lancedb = "^0.3.0"
->>>>>>> 3dda9dd (feat: Add multimodal embeddings and vector search (Phase 3))
-=======
->>>>>>> 25bbc40 (feat: Add transcript correction and complete LLM integration)
+# LLM dependencies (optional)
+anthropic = {version = "^0.39.0", optional = true}
+python-dotenv = {version = "^1.0.0", optional = true}
+langchain = {version = "^0.3.0", optional = true}
+langchain-anthropic = {version = "^0.3.0", optional = true}
+
+[tool.poetry.extras]
+llm = ["anthropic", "python-dotenv", "langchain", "langchain-anthropic"]
+all = ["anthropic", "python-dotenv", "langchain", "langchain-anthropic"]
 
 [tool.poetry.group.dev.dependencies]
-# Dev dependencies will be added as needed
 pytest = "^7.4.0"
 pytest-cov = "^4.1.0"
 pytest-mock = "^3.12.0"
-=======
-python = "^3.9"
-=======
-python = ">=3.9,<3.14"
->>>>>>> 6e8959a (feat: Add transcript extraction with Whisper)
-# Dependencies will be added incrementally
-openai-whisper = "^20231117"
-loguru = "^0.7.0"
-
-[tool.poetry.group.dev.dependencies]
-# Dev dependencies will be added as needed
-<<<<<<< HEAD
->>>>>>> db3361e (Initial commit: Project structure and Poetry setup)
-=======
-pytest = "^7.4.0"
-pytest-cov = "^4.1.0"
-pytest-mock = "^3.12.0"
->>>>>>> 6e8959a (feat: Add transcript extraction with Whisper)
 
 [tool.poetry.scripts]
 framewise = "framewise.cli:main"
