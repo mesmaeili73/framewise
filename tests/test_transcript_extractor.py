@@ -197,11 +197,11 @@ class TestTranscriptExtractor:
         assert extractor.device == "cuda"
         assert extractor.language == "es"
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_load_model(self, mock_whisper):
+    @patch('whisper.load_model')
+    def test_load_model(self, mock_load_model):
         """Test lazy loading of Whisper model"""
         mock_model = MagicMock()
-        mock_whisper.load_model.return_value = mock_model
+        mock_load_model.return_value = mock_model
         
         extractor = TranscriptExtractor(model_size="tiny")
         assert extractor._model is None
@@ -209,35 +209,35 @@ class TestTranscriptExtractor:
         extractor._load_model()
         
         assert extractor._model is not None
-        mock_whisper.load_model.assert_called_once_with("tiny", device=None)
+        mock_load_model.assert_called_once_with("tiny", device=None)
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_load_model_with_device(self, mock_whisper):
+    @patch('whisper.load_model')
+    def test_load_model_with_device(self, mock_load_model):
         """Test loading model with specific device"""
         mock_model = MagicMock()
-        mock_whisper.load_model.return_value = mock_model
+        mock_load_model.return_value = mock_model
         
         extractor = TranscriptExtractor(device="cuda")
         extractor._load_model()
         
-        mock_whisper.load_model.assert_called_once_with("base", device="cuda")
+        mock_load_model.assert_called_once_with("base", device="cuda")
     
-    def test_load_model_import_error(self):
+    @patch('builtins.__import__', side_effect=ImportError("No module named 'whisper'"))
+    def test_load_model_import_error(self, mock_import):
         """Test handling of missing whisper package"""
-        with patch('framewise.core.transcript_extractor.whisper', None):
-            extractor = TranscriptExtractor()
-            
-            with pytest.raises(ImportError, match="openai-whisper is not installed"):
-                extractor._load_model()
+        extractor = TranscriptExtractor()
+        
+        with pytest.raises(ImportError, match="openai-whisper is not installed"):
+            extractor._load_model()
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_extract_success(self, mock_whisper, tmp_path, mock_whisper_model, sample_whisper_result):
+    @patch('whisper.load_model')
+    def test_extract_success(self, mock_load_model, tmp_path, mock_whisper_model, sample_whisper_result):
         """Test successful transcript extraction"""
         # Create a dummy video file
         video_path = tmp_path / "test.mp4"
         video_path.touch()
         
-        mock_whisper.load_model.return_value = mock_whisper_model
+        mock_load_model.return_value = mock_whisper_model
         
         extractor = TranscriptExtractor()
         transcript = extractor.extract(video_path)
@@ -254,14 +254,14 @@ class TestTranscriptExtractor:
         with pytest.raises(FileNotFoundError, match="Video file not found"):
             extractor.extract("nonexistent.mp4")
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_extract_with_output_path(self, mock_whisper, tmp_path, mock_whisper_model):
+    @patch('whisper.load_model')
+    def test_extract_with_output_path(self, mock_load_model, tmp_path, mock_whisper_model):
         """Test extraction with saving to output path"""
         video_path = tmp_path / "test.mp4"
         video_path.touch()
         output_path = tmp_path / "output.json"
         
-        mock_whisper.load_model.return_value = mock_whisper_model
+        mock_load_model.return_value = mock_whisper_model
         
         extractor = TranscriptExtractor()
         transcript = extractor.extract(video_path, output_path)
@@ -272,13 +272,13 @@ class TestTranscriptExtractor:
         loaded = Transcript.load(output_path)
         assert loaded.language == transcript.language
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_extract_with_language(self, mock_whisper, tmp_path, mock_whisper_model):
+    @patch('whisper.load_model')
+    def test_extract_with_language(self, mock_load_model, tmp_path, mock_whisper_model):
         """Test extraction with specified language"""
         video_path = tmp_path / "test.mp4"
         video_path.touch()
         
-        mock_whisper.load_model.return_value = mock_whisper_model
+        mock_load_model.return_value = mock_whisper_model
         
         extractor = TranscriptExtractor(language="es")
         transcript = extractor.extract(video_path)
@@ -288,8 +288,8 @@ class TestTranscriptExtractor:
         call_kwargs = mock_whisper_model.transcribe.call_args[1]
         assert call_kwargs["language"] == "es"
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_extract_batch(self, mock_whisper, tmp_path, mock_whisper_model):
+    @patch('whisper.load_model')
+    def test_extract_batch(self, mock_load_model, tmp_path, mock_whisper_model):
         """Test batch extraction of multiple videos"""
         # Create dummy video files
         video_paths = [
@@ -300,7 +300,7 @@ class TestTranscriptExtractor:
         for path in video_paths:
             path.touch()
         
-        mock_whisper.load_model.return_value = mock_whisper_model
+        mock_load_model.return_value = mock_whisper_model
         
         extractor = TranscriptExtractor()
         transcripts = extractor.extract_batch(video_paths)
@@ -308,8 +308,8 @@ class TestTranscriptExtractor:
         assert len(transcripts) == 3
         assert all(isinstance(t, Transcript) for t in transcripts)
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_extract_batch_with_output_dir(self, mock_whisper, tmp_path, mock_whisper_model):
+    @patch('whisper.load_model')
+    def test_extract_batch_with_output_dir(self, mock_load_model, tmp_path, mock_whisper_model):
         """Test batch extraction with output directory"""
         # Create dummy video files
         video_paths = [tmp_path / "video1.mp4", tmp_path / "video2.mp4"]
@@ -318,7 +318,7 @@ class TestTranscriptExtractor:
         
         output_dir = tmp_path / "transcripts"
         
-        mock_whisper.load_model.return_value = mock_whisper_model
+        mock_load_model.return_value = mock_whisper_model
         
         extractor = TranscriptExtractor()
         transcripts = extractor.extract_batch(video_paths, output_dir)
@@ -328,13 +328,13 @@ class TestTranscriptExtractor:
         assert (output_dir / "video1_transcript.json").exists()
         assert (output_dir / "video2_transcript.json").exists()
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_model_reuse(self, mock_whisper, tmp_path, mock_whisper_model):
+    @patch('whisper.load_model')
+    def test_model_reuse(self, mock_load_model, tmp_path, mock_whisper_model):
         """Test that model is loaded once and reused"""
         video_path = tmp_path / "test.mp4"
         video_path.touch()
         
-        mock_whisper.load_model.return_value = mock_whisper_model
+        mock_load_model.return_value = mock_whisper_model
         
         extractor = TranscriptExtractor()
         
@@ -343,7 +343,7 @@ class TestTranscriptExtractor:
         extractor.extract(video_path)
         
         # Model should only be loaded once
-        mock_whisper.load_model.assert_called_once()
+        mock_load_model.assert_called_once()
 
 
 # Integration-style tests
@@ -351,14 +351,14 @@ class TestTranscriptExtractor:
 class TestTranscriptExtractorIntegration:
     """Integration tests for the full workflow"""
     
-    @patch('framewise.core.transcript_extractor.whisper')
-    def test_full_workflow(self, mock_whisper, tmp_path, mock_whisper_model):
+    @patch('whisper.load_model')
+    def test_full_workflow(self, mock_load_model, tmp_path, mock_whisper_model):
         """Test complete workflow: extract, save, load"""
         video_path = tmp_path / "tutorial.mp4"
         video_path.touch()
         output_path = tmp_path / "transcript.json"
         
-        mock_whisper.load_model.return_value = mock_whisper_model
+        mock_load_model.return_value = mock_whisper_model
         
         # Extract
         extractor = TranscriptExtractor()
