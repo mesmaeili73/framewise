@@ -83,3 +83,4 @@ ROADMAP_PRIVATE.md
 # Logs
 *.log
 logs/
+coverage.xml
