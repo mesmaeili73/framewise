@@ -5,7 +5,7 @@ Transform tutorial videos into instant, visual support with intelligent
 frame extraction and multimodal RAG.
 """
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 from framewise.core import (
     TranscriptExtractor,
